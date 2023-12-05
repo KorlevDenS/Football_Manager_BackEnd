@@ -27,8 +27,14 @@ public class ClientsController {
         return clientRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
+    @PostMapping("/{email}")
+    public Client getClientByEmail(@PathVariable String email) {
+        return clientRepository.findByEmail(email);
+    }
+
     @PostMapping
     public ResponseEntity<Client> createClient(@RequestBody Client client) throws URISyntaxException {
+
         Client savedClient = clientRepository.save(client);
         return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
     }
