@@ -1,4 +1,4 @@
-package com.den.korolev.football_manager.user;
+package com.den.korolev.football_manager.entities;
 
 import lombok.Getter;
 import lombok.Setter;

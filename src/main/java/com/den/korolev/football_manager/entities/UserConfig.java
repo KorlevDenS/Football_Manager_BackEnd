@@ -1,4 +1,4 @@
-package com.den.korolev.football_manager.user;
+package com.den.korolev.football_manager.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,7 +21,9 @@ public class UserConfig {
     @Column(unique = true)
     private String login;
     private String role;
-    private String lang;
-    private String theme;
     private Date reg_date;
+
+    @OneToOne(mappedBy = "userConfig", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Player player;
 }
