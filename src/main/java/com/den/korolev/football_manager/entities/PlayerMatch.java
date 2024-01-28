@@ -1,6 +1,7 @@
 package com.den.korolev.football_manager.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,10 +20,12 @@ public class PlayerMatch {
 
     @ManyToOne
     @JoinColumn(name="id_match", nullable=false)
+    @JsonIgnore
     private Match match;
 
     @ManyToOne
     @JoinColumn(name="id_player", nullable=false)
+    @JsonIgnore
     private Player player;
 
     private Integer goals;

@@ -1,5 +1,6 @@
 package com.den.korolev.football_manager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,10 +17,12 @@ public class PlayerCustom {
 
     @ManyToOne
     @JoinColumn(name="id_custom", nullable=false)
+    @JsonIgnore
     private Custom custom;
 
     @ManyToOne
     @JoinColumn(name="id_player", nullable=false)
+    @JsonIgnore
     private Player player;
 
     private String what_liked;

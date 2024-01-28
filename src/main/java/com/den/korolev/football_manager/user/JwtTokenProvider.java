@@ -66,7 +66,7 @@ public class JwtTokenProvider {
         Properties properties = new Properties();
         String jwtSecret;
         try {
-            FileInputStream inputStream = new FileInputStream("C:\\Users\\mvideo\\IdeaProjects\\football_manager\\src\\main\\resources\\user.properties");
+            FileInputStream inputStream = new FileInputStream("src/main/resources/user.properties");
             properties.load(inputStream);
             jwtSecret = properties.getProperty("jwt.secret");
         } catch (IOException e) {

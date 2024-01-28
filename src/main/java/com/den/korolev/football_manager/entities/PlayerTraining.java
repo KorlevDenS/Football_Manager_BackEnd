@@ -1,5 +1,6 @@
 package com.den.korolev.football_manager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,10 +17,12 @@ public class PlayerTraining {
 
     @ManyToOne
     @JoinColumn(name="id_training", nullable=false)
+    @JsonIgnore
     private Training training;
 
     @ManyToOne
     @JoinColumn(name="id_player", nullable=false)
+    @JsonIgnore
     private Player player;
 
     private Integer goals;

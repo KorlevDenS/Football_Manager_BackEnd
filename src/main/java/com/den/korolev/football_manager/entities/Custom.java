@@ -1,5 +1,6 @@
 package com.den.korolev.football_manager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,10 +19,12 @@ public class Custom {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_collective_event", referencedColumnName = "id")
+    @JsonIgnore
     private CollectiveEvent collectiveEvent;
 
     private String name;
 
     @OneToMany(mappedBy="custom")
-    private Set<PlayerCustom> customs;
+    @JsonIgnore
+    private Set<PlayerCustom> playerCustoms;
 }

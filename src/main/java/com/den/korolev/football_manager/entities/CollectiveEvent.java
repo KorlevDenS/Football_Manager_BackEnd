@@ -1,5 +1,6 @@
 package com.den.korolev.football_manager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,12 +26,15 @@ public class CollectiveEvent {
 
 
     @OneToOne(mappedBy = "collectiveEvent")
+    @JsonIgnore
     private Training training;
 
     @OneToOne(mappedBy = "collectiveEvent")
+    @JsonIgnore
     private Match match;
 
     @OneToOne(mappedBy = "collectiveEvent")
+    @JsonIgnore
     private Custom custom;
 
 }
