@@ -6,13 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/new/event")
+@RequestMapping("/event/add")
 public class EventAddController {
 
     private final PlayerTrainingRepository playerTrainingRepository;
@@ -27,16 +24,13 @@ public class EventAddController {
 
     private final PlayerRepository playerRepository;
 
-    private final CollectiveEventRepository collectiveEventRepository;
-
     public EventAddController(PlayerTrainingRepository playerTrainingRepository,
                               PlayerMatchRepository playerMatchRepository,
                               PlayerCustomRepository playerCustomRepository,
                               PlayerRepository playerRepository,
                               TrainingRepository trainingRepository,
                               MatchRepository matchRepository,
-                              CustomRepository customRepository,
-                              CollectiveEventRepository collectiveEventRepository) {
+                              CustomRepository customRepository) {
         this.playerTrainingRepository = playerTrainingRepository;
         this.playerMatchRepository = playerMatchRepository;
         this.playerCustomRepository = playerCustomRepository;
@@ -44,24 +38,9 @@ public class EventAddController {
         this.trainingRepository = trainingRepository;
         this.matchRepository = matchRepository;
         this.customRepository = customRepository;
-        this.collectiveEventRepository = collectiveEventRepository;
     }
 
-
-    @GetMapping("get")
-    public List<CollectiveEvent> getEvents(@RequestAttribute(name = "Uid") Long UID) {
-        return collectiveEventRepository.findAllByUserID(UID);
-    }
-
-    @GetMapping("get/{begin}/{end}")
-    public List<CollectiveEvent> getEventsByTimePeriod(@PathVariable String begin, @PathVariable String end, @RequestAttribute(name = "Uid") Long UID) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-
-        return collectiveEventRepository.findAllByTimePeriod(UID, dateFormat.parse(begin), dateFormat.parse(end));
-    }
-
-
-    @PostMapping("add")
+    @PostMapping("new")
     public ResponseEntity<?> addUserEvent(@RequestBody AddUserEventRequest addUserEventRequest,
                                           @RequestAttribute(name = "Uid") Long UID) {
 
