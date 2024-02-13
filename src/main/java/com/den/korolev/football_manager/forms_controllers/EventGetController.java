@@ -42,15 +42,26 @@ public class EventGetController {
     }
 
     @GetMapping("collective/events/{begin}/{end}")
-    public List<CollectiveEvent> getEventsByTimePeriod(@PathVariable String begin, @PathVariable String end, @RequestAttribute(name = "Uid") Long UID) throws ParseException {
+    public List<CollectiveEvent> getEventsByTimePeriod(@PathVariable String begin, @PathVariable String end,
+                                                       @RequestAttribute(name = "Uid") Long UID) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
         return collectiveEventRepository.findAllByTimePeriod(UID, dateFormat.parse(begin), dateFormat.parse(end));
     }
 
-    @PostMapping("collective/events/")
-    public Match getMatchById(@RequestBody Long id, @RequestAttribute(name = "Uid") Long UID) {
+    @PostMapping("match")
+    public Match getMatchById(@RequestBody Integer id, @RequestAttribute(name = "Uid") Long UID) {
         return matchRepository.findByUserAndEvent(id, UID);
+    }
+
+    @PostMapping("training")
+    public Training getTrainingById(@RequestBody Integer id, @RequestAttribute(name = "Uid") Long UID) {
+        return trainingRepository.findByUserAndEvent(id, UID);
+    }
+
+    @PostMapping("custom")
+    public Custom getCustomById(@RequestBody Integer id, @RequestAttribute(name = "Uid") Long UID) {
+        return customRepository.findByUserAndEvent(id, UID);
     }
 
 }

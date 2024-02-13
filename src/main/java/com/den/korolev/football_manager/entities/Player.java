@@ -34,4 +34,7 @@ public class Player {
 
     @OneToMany(mappedBy="player")
     private Set<PlayerCustom> playerCustoms;
+
+    @OneToMany(mappedBy="player")
+    private Set<Exercise> playerExercises;
 }

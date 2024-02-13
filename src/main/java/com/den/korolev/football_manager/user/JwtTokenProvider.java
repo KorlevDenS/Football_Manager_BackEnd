@@ -3,6 +3,7 @@ package com.den.korolev.football_manager.user;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -50,7 +51,7 @@ public class JwtTokenProvider {
                 return Long.valueOf(claims.getSubject());
             }
             throw new InvalidTokenException("Token is rotten");
-        } catch (SignatureException e) {
+        } catch (SignatureException | MalformedJwtException e) {
             throw new InvalidTokenException(e.getMessage());
         }
 

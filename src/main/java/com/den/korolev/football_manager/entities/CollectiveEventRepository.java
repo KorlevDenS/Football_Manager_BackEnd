@@ -23,4 +23,6 @@ public interface CollectiveEventRepository extends JpaRepository<CollectiveEvent
                 (id in (select id_collective_event from custom where id in (select id_custom from player_custom where id_player = :UID))))
                 and date >= :begin and date <= :end""", nativeQuery = true)
     List<CollectiveEvent> findAllByTimePeriod(@Param("UID") Long UID, @Param("begin") Date begin, @Param("end") Date end);
+
+
 }

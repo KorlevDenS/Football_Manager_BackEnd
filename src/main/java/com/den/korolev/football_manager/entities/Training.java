@@ -31,4 +31,8 @@ public class Training {
     @OneToMany(mappedBy="training")
     @JsonIgnore
     private Set<PlayerTraining> playerTrainings;
+
+    @OneToMany(mappedBy="training")
+    @JsonIgnore
+    private Set<TrainingTarget> playerTrainingTargets;
 }

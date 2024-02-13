@@ -13,7 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "authorizationFilter", urlPatterns = {"/event/add/*", "/event/get/*"})
+@WebFilter(filterName = "authorizationFilter", urlPatterns = {"/event/add/*", "/event/get/*", "/exercise/*"})
 @Component
 public class AuthorizationFilter extends OncePerRequestFilter {
 

@@ -95,3 +95,25 @@ CREATE TABLE player_match (
     what_to_improve VARCHAR(100),
     comments VARCHAR(100)
 );
+
+create table exercise (
+    id SERIAL PRIMARY KEY,
+    id_player INTEGER REFERENCES player,
+    title VARCHAR(64),
+    technic VARCHAR,
+    photoLink VARCHAR,
+    videoLink VARCHAR,
+    duration TIME,
+    amount INTEGER,
+    muscle_load VARCHAR(64),
+    equipment VARCHAR(100),
+    min_people INTEGER,
+    usage_count INTEGER,
+    date DATE NOT NULL
+);
+
+create table training_target (
+    id SERIAL PRIMARY KEY,
+    id_training INTEGER REFERENCES training,
+    id_exercise INTEGER REFERENCES exercise
+);
