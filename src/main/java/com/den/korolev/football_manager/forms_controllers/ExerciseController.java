@@ -4,6 +4,8 @@ import com.den.korolev.football_manager.entities.*;
 import com.den.korolev.football_manager.request_params.ExercisesMatchRequest;
 import com.den.korolev.football_manager.services.ExerciseFileService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,8 +58,14 @@ public class ExerciseController {
     }
 
     @GetMapping("get/exercises")
-    public List<Exercise> getEvents(@RequestAttribute(name = "Uid") Long UID) {
+    public List<Exercise> getExercises(@RequestAttribute(name = "Uid") Long UID) {
         return exerciseRepository.findAllByUserID(UID);
+    }
+
+    @Transactional
+    @PostMapping("get/event/exercises")
+    public List<Exercise> getEventExercises(@RequestBody Integer event_id, @RequestAttribute(name = "Uid") Integer UID) {
+        return exerciseRepository.find_exercises_by_event(event_id, UID);
     }
 
     @PostMapping("add/photo")
@@ -72,6 +80,20 @@ public class ExerciseController {
         return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"No photo uploaded\"}");
     }
 
+    @PostMapping("get/photo")
+    public Resource loadPhoto(@RequestBody Integer exercise_id, @RequestAttribute(name = "Uid") Long UID) {
+        String photoLink = exerciseRepository.findPhotoByIdAndPlayer(exercise_id, UID);
+        return exerciseFileService.getPhoto(photoLink);
+    }
+
+    @PostMapping("get/video")
+    public Resource loadVideo(@RequestBody Integer exercise_id, @RequestAttribute(name = "Uid") Long UID) {
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        String videoLink = exerciseRepository.findVideoByIdAndPlayer(exercise_id, UID);
+        Resource resource =  exerciseFileService.getVideo(videoLink);
+        return resource;
+    }
 
     @PostMapping("add/video")
     public ResponseEntity<?> uploadVideo(@RequestParam("video") MultipartFile multipartFile,

@@ -13,7 +13,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "authorizationFilter", urlPatterns = {"/event/add/*", "/event/get/*", "/exercise/*"})
+@WebFilter(filterName = "authorizationFilter", urlPatterns = {"/event/add/*", "/event/get/*",
+        "/exercise/*", "/event/delete/*"})
 @Component
 public class AuthorizationFilter extends OncePerRequestFilter {
 
@@ -36,7 +37,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
             return;
         }
-        logger.info("Good user: id: " + userId + " token: " + token);
+        logger.info("Good user: id: " + userId);
         request.setAttribute("Uid", userId);
         filterChain.doFilter(request, response);
     }

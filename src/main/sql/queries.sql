@@ -54,7 +54,7 @@ CREATE TABLE player_custom (
 
 CREATE TABLE training (
     id SERIAL PRIMARY KEY,
-    id_collective_event INTEGER REFERENCES collective_event,
+    id_collective_event INTEGER REFERENCES collective_event on DELETE cascade,
     type VARCHAR(32),
     players_amount INTEGER,
     field_format VARCHAR(32)

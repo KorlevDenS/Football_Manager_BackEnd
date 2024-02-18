@@ -1,6 +1,7 @@
 package com.den.korolev.football_manager.forms_controllers;
 
 import com.den.korolev.football_manager.entities.*;
+import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -62,6 +63,26 @@ public class EventGetController {
     @PostMapping("custom")
     public Custom getCustomById(@RequestBody Integer id, @RequestAttribute(name = "Uid") Long UID) {
         return customRepository.findByUserAndEvent(id, UID);
+    }
+
+
+
+    @Transactional
+    @PostMapping("player/match")
+    public PlayerMatch getPlayerMatchById(@RequestBody Integer id, @RequestAttribute(name = "Uid") Integer UID) {
+        return playerMatchRepository.find_player_match_by_id(id, UID);
+    }
+
+    @Transactional
+    @PostMapping("player/training")
+    public PlayerTraining getPlayerTrainingById(@RequestBody Integer id, @RequestAttribute(name = "Uid") Integer UID) {
+        return playerTrainingRepository.find_player_training_by_id(id, UID);
+    }
+
+    @Transactional
+    @PostMapping("player/custom")
+    public PlayerCustom getPlayerCustomById(@RequestBody Integer id, @RequestAttribute(name = "Uid") Integer UID) {
+        return playerCustomRepository.find_player_custom_by_id(id, UID);
     }
 
 }
