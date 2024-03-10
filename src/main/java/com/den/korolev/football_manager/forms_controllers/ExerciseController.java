@@ -91,8 +91,7 @@ public class ExerciseController {
         //HttpHeaders headers = new HttpHeaders();
         //headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         String videoLink = exerciseRepository.findVideoByIdAndPlayer(exercise_id, UID);
-        Resource resource =  exerciseFileService.getVideo(videoLink);
-        return resource;
+        return exerciseFileService.getVideo(videoLink);
     }
 
     @PostMapping("add/video")

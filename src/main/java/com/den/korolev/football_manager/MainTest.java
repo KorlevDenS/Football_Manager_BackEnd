@@ -1,14 +1,13 @@
 package com.den.korolev.football_manager;
 
 import com.den.korolev.football_manager.user.InvalidTokenException;
-import com.den.korolev.football_manager.user.JwtTokenProvider;
-import com.den.korolev.football_manager.user.PasswordEncoder;
+import com.den.korolev.football_manager.services.JwtTokenService;
 
 public class MainTest {
 
 
     public static void main(String[] args) {
-        JwtTokenProvider tokenProvider = new JwtTokenProvider();
+        JwtTokenService tokenProvider = new JwtTokenService();
 
         String token = tokenProvider.generateToken(12L, "user");
 

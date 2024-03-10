@@ -116,3 +116,40 @@ create table training_target (
                                  id_training INTEGER REFERENCES training on delete cascade,
                                  id_exercise INTEGER REFERENCES exercise on delete cascade
 );
+
+create table club (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    foundation_date DATE NOT NULL,
+    reg_date DATE NOT NULL,
+    id_founder INTEGER REFERENCES human NOT NULL ,
+    location VARCHAR(100) NOT NULL,
+    short_name VARCHAR(32),
+    description VARCHAR(300) NOT NULL DEFAULT ''
+);
+
+create table application (
+    id SERIAL PRIMARY KEY,
+    id_player INTEGER REFERENCES player ON DELETE CASCADE NOT NULL ,
+    id_club INTEGER REFERENCES club ON DELETE CASCADE NOT NULL ,
+    player_approve BOOLEAN NOT NULL ,
+    club_approve BOOLEAN NOT NULL ,
+    creation_date DATE NOT NULL ,
+    message VARCHAR(100)
+);
+
+create table club_management (
+    id SERIAL PRIMARY KEY,
+    id_config INTEGER REFERENCES config ON DELETE CASCADE NOT NULL ,
+    id_club INTEGER REFERENCES club ON DELETE CASCADE NOT NULL ,
+    role VARCHAR(32)
+);
+
+create table club_membership (
+    id SERIAL PRIMARY KEY,
+    id_player INTEGER REFERENCES player ON DELETE CASCADE NOT NULL ,
+    id_club INTEGER REFERENCES club ON DELETE CASCADE NOT NULL ,
+    begin_date DATE NOT NULL ,
+    u_payment DOUBLE PRECISION,
+    c_salary DOUBLE PRECISION
+);

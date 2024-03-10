@@ -1,12 +1,11 @@
-package com.den.korolev.football_manager.user;
+package com.den.korolev.football_manager.services;
 
-import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 
-
-@Component
-public class PasswordEncoder {
+@Service
+public class PasswordServiceImpl implements PasswordService {
 
     public String makeBCryptHash(String password) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

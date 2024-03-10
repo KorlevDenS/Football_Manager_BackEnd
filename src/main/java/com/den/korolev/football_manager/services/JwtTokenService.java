@@ -1,13 +1,14 @@
-package com.den.korolev.football_manager.user;
+package com.den.korolev.football_manager.services;
 
 
+import com.den.korolev.football_manager.user.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,12 +17,12 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Properties;
 
-@Component
-public class JwtTokenProvider {
+@Service
+public class JwtTokenService {
 
     private final String jwtSecret;
 
-    public JwtTokenProvider() {
+    public JwtTokenService() {
         this.jwtSecret = getSecretProperty();
     }
 
