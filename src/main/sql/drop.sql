@@ -33,3 +33,5 @@ drop table collective_event;
 drop table player;
 drop table config;
 drop table human;
+
+drop table application;

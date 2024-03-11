@@ -1,10 +1,23 @@
 package com.den.korolev.football_manager.entities;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface TrainingRepository extends JpaRepository<Training, Long> {
+
+    @Modifying
+    @Query(value = "update training set field_format = :field_format where id = :id_training", nativeQuery = true)
+    void updateFieldFormat(@Param("id_training") Integer id_training, @Param("field_format") String field_format);
+
+    @Modifying
+    @Query(value = "update training set type = :type where id = :id_training", nativeQuery = true)
+    void updateType(@Param("id_training") Integer id_training, @Param("type") String type);
+
+    @Modifying
+    @Query(value = "update training set players_amount = :players_amount where id = :id_training", nativeQuery = true)
+    void updatePlayersAmount(@Param("id_training") Integer id_training, @Param("players_amount") Integer players_amount);
 
     @Query(value = """
             select c from Training c where

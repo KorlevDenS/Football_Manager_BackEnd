@@ -132,8 +132,8 @@ create table application (
     id SERIAL PRIMARY KEY,
     id_player INTEGER REFERENCES player ON DELETE CASCADE NOT NULL ,
     id_club INTEGER REFERENCES club ON DELETE CASCADE NOT NULL ,
-    player_approve BOOLEAN NOT NULL ,
-    club_approve BOOLEAN NOT NULL ,
+    player_approve INTEGER NOT NULL CHECK ( player_approve >= 0 AND player_approve <= 2),
+    club_approve INTEGER NOT NULL CHECK ( club_approve >= 0 AND club_approve <= 2),
     creation_date DATE NOT NULL ,
     message VARCHAR(100)
 );

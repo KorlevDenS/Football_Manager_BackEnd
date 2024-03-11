@@ -13,7 +13,7 @@ public class PlayerCustom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name="id_custom", nullable=false)

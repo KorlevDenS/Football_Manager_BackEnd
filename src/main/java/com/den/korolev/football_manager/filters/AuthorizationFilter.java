@@ -14,7 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @WebFilter(filterName = "authorizationFilter", urlPatterns = {"/user/get/*", "/user/update/*", "/event/add/*",
-        "/event/get/*", "/exercise/*", "/event/delete/*", "/club/*"})
+        "/event/get/*", "/exercise/*", "/event/delete/*", "/event/update/*", "/club/*"})
 @Component
 public class AuthorizationFilter extends OncePerRequestFilter {
 

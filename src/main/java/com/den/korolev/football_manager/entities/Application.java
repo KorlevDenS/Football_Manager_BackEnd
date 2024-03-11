@@ -32,10 +32,10 @@ public class Application {
     private Club id_club;
 
     @Column(name = "player_approve", nullable = false)
-    private Boolean player_approve = false;
+    private Integer player_approve;
 
     @Column(name = "club_approve", nullable = false)
-    private Boolean club_approve = false;
+    private Integer club_approve;
 
     @Column(name = "creation_date", nullable = false)
     private LocalDate creation_date;

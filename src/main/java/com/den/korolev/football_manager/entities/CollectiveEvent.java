@@ -16,7 +16,7 @@ public class CollectiveEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String type;
     private String location;
     private Date date;
