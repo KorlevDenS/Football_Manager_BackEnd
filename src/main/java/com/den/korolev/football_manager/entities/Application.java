@@ -43,4 +43,14 @@ public class Application {
     @Column(name = "message", length = 100)
     private String message;
 
+    @Override
+    public String toString(){
+        return "{id: " + this.id + ", " +
+                "id_player: " + this.id_player.getId() + ", " +
+                "player_approve: " + this.player_approve + ", " +
+                "club_approve: " + this.club_approve + ", " +
+                "creation_date: " + this.creation_date.toString() + ", " +
+                "message: " + this.message+ ", ";
+    }
+
 }

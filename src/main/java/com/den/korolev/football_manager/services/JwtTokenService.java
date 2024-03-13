@@ -28,7 +28,7 @@ public class JwtTokenService {
 
     public String generateToken(Long subjectId, String role) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 3600000); // устанавливаем срок действия токена (1 час)
+        Date expiryDate = new Date(now.getTime() + 86400000); // устанавливаем срок действия токена (1 день)
 
 
         return Jwts.builder()

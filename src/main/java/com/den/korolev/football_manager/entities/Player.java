@@ -18,7 +18,6 @@ public class Player {
     @Column(name = "id_config")
     private Long id;
 
-
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_human", referencedColumnName = "id")

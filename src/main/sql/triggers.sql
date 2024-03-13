@@ -43,3 +43,34 @@ create trigger trigger_delete_custom_if_not_used
     after delete on player_custom
     for each row
 execute function delete_custom_if_not_used();
+
+
+
+create or replace function check_duplicate_apps()
+    returns trigger as $$
+begin
+    if exists(select 1 from application where id_club = new.id_club and id_player = new.id_player and club_approve = 0)
+    then RAISE EXCEPTION 'Unresolved application from this player to club already exists';
+    end if;
+    return new;
+end;
+$$ LANGUAGE plpgsql;
+
+create trigger prevent_duplicate_apps before insert on application
+    for each row execute function check_duplicate_apps();
+
+
+
+create or replace function add_club_membership()
+    returns trigger as $$
+begin
+    if new.club_approve = 1 then
+        insert into club_membership (id_player, id_club, begin_date, u_payment, c_salary)
+        VALUES (new.id_player, new.id_club, new.creation_date, 0.0, 0.0);
+    end if;
+    return new;
+end;
+$$ LANGUAGE plpgsql;
+
+create trigger add_player_to_club after update on application
+    for each row execute function add_club_membership();
