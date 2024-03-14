@@ -2,7 +2,8 @@ create or replace function delete_training_if_not_used()
     returns trigger as $$
 begin
     delete from collective_event where
-        id in (select id_collective_event from training where id not in (select id_training from player_training));
+        id in (select id_collective_event from training where (id not in (select id_training from player_training)) and
+            (training.id_collective_event not in (select club_event.id_collective_event from club_event)));
     return new;
 end;
 $$ language plpgsql;
@@ -18,7 +19,8 @@ create or replace function delete_match_if_not_used()
     returns trigger as $$
 begin
     delete from collective_event where
-        id in (select id_collective_event from match where id not in (select id_match from player_match));
+        id in (select id_collective_event from match where (id not in (select id_match from player_match)) and
+            (match.id_collective_event not in (select club_event.id_collective_event from club_event)));
     return new;
 end;
 $$ language plpgsql;
@@ -34,7 +36,8 @@ create or replace function delete_custom_if_not_used()
     returns trigger as $$
 begin
     delete from collective_event where
-        id in (select id_collective_event from custom where id not in (select id_custom from player_custom));
+        id in (select id_collective_event from custom where (id not in (select id_custom from player_custom)) and
+            (custom.id_collective_event not in (select club_event.id_collective_event from club_event)));
     return new;
 end;
 $$ language plpgsql;

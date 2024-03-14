@@ -57,18 +57,3 @@ begin
         where collective_event.id =  event_id and player_match.id_player = user_id;
 end;
 $$ language plpgsql;
-
-
-
-create or replace function find_exercises_by_event(event_id int, user_id int) returns
-    setof exercise as
-$$
-begin
-    return query
-        select exercise.id, id_player, title, technic, photo_link, video_link, duration,
-               amount, muscle_load, equipment, min_people, usage_count, date from
-            exercise left join training_target on exercise.id = training_target.id_exercise
-            left join training on training_target.id_training = training.id
-        where training.id_collective_event = event_id and exercise.id_player = user_id;
-end;
-$$ language plpgsql;

@@ -37,8 +37,8 @@ public class ExerciseController {
 
     @PostMapping("to/training")
     public ResponseEntity<?> attachToTraining(@RequestBody ExercisesMatchRequest exercisesMatchRequest) {
-        Long trainingId = exercisesMatchRequest.getEventId();
-        Long[] exercisesIds = exercisesMatchRequest.getExercisesIds();
+        Long trainingId = exercisesMatchRequest.eventId();
+        Long[] exercisesIds = exercisesMatchRequest.exercisesIds();
 
         for (Long exercisesId : exercisesIds) {
             TrainingTarget trainingTarget = new TrainingTarget();
@@ -62,10 +62,15 @@ public class ExerciseController {
         return exerciseRepository.findAllByUserID(UID);
     }
 
+//    @GetMapping("get/club/exercises/{clubId}")
+//    public List<Exercise> getClubExercises(@RequestAttribute(name = "Uid") Integer UID, @PathVariable Integer clubId) {
+//        return exerciseRepository.findAllByClub(clubId, UID);
+//    }
+
     @Transactional
     @PostMapping("get/event/exercises")
-    public List<Exercise> getEventExercises(@RequestBody Integer event_id, @RequestAttribute(name = "Uid") Integer UID) {
-        return exerciseRepository.find_exercises_by_event(event_id, UID);
+    public List<Exercise> getEventExercises(@RequestBody Integer event_id) {
+        return exerciseRepository.find_exercises_by_event(event_id);
     }
 
     @PostMapping("add/photo")
@@ -81,8 +86,8 @@ public class ExerciseController {
     }
 
     @PostMapping("get/photo")
-    public Resource loadPhoto(@RequestBody Integer exercise_id, @RequestAttribute(name = "Uid") Long UID) {
-        String photoLink = exerciseRepository.findPhotoByIdAndPlayer(exercise_id, UID);
+    public Resource loadPhoto(@RequestBody Integer exercise_id) {
+        String photoLink = exerciseRepository.findPhotoByIdAndPlayer(exercise_id);
         return exerciseFileService.getPhoto(photoLink);
     }
 
@@ -120,4 +125,5 @@ public class ExerciseController {
         exerciseRepository.save(exercise);
         return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"Saved exercise\"}");
     }
+
 }

@@ -72,12 +72,8 @@ public class UserController {
     }
 
     @PostMapping("/get/human")
-    public Human getHuman(@RequestAttribute(name = "Uid") Long UID) {
-        Optional<Human> humanOptional = humanRepository.findById(UID);
-        if (humanOptional.isPresent()) {
-            return humanOptional.get();
-        }
-        throw new RuntimeException();
+    public Human getHuman(@RequestAttribute(name = "Uid") Integer UID) {
+        return humanRepository.getHumanByConfig(UID);
     }
 
     @PostMapping("/get/player")

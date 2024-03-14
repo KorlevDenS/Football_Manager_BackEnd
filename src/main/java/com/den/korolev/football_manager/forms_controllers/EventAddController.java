@@ -1,9 +1,7 @@
 package com.den.korolev.football_manager.forms_controllers;
 
 import com.den.korolev.football_manager.entities.*;
-import com.den.korolev.football_manager.request_params.CustomAddRequest;
-import com.den.korolev.football_manager.request_params.MatchAddRequest;
-import com.den.korolev.football_manager.request_params.TrainingAddRequest;
+import com.den.korolev.football_manager.request_params.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +23,9 @@ public class EventAddController {
     private final TrainingRepository trainingRepository;
 
     private final PlayerRepository playerRepository;
+    private final ClubRepository clubRepository;
+    private final ClubEventRepository clubEventRepository;
+    private final CollectiveEventRepository collectiveEventRepository;
 
     public EventAddController(PlayerTrainingRepository playerTrainingRepository,
                               PlayerMatchRepository playerMatchRepository,
@@ -32,7 +33,10 @@ public class EventAddController {
                               PlayerRepository playerRepository,
                               TrainingRepository trainingRepository,
                               MatchRepository matchRepository,
-                              CustomRepository customRepository) {
+                              CustomRepository customRepository,
+                              ClubRepository clubRepository,
+                              ClubEventRepository clubEventRepository,
+                              CollectiveEventRepository collectiveEventRepository) {
         this.playerTrainingRepository = playerTrainingRepository;
         this.playerMatchRepository = playerMatchRepository;
         this.playerCustomRepository = playerCustomRepository;
@@ -40,6 +44,9 @@ public class EventAddController {
         this.trainingRepository = trainingRepository;
         this.matchRepository = matchRepository;
         this.customRepository = customRepository;
+        this.clubRepository = clubRepository;
+        this.clubEventRepository = clubEventRepository;
+        this.collectiveEventRepository = collectiveEventRepository;
     }
 
     @PostMapping("new/training")
@@ -48,10 +55,10 @@ public class EventAddController {
         Optional<Player> optionalPlayer = playerRepository.findById(UID);
         if (optionalPlayer.isEmpty()) throw new RuntimeException();
         Player player = optionalPlayer.get();
-        PlayerTraining playerTraining = trainingAddRequest.getPlayerTraining();
+        PlayerTraining playerTraining = trainingAddRequest.playerTraining();
         playerTraining.setPlayer(player);
-        Training training = trainingAddRequest.getTraining();
-        CollectiveEvent collectiveEvent = trainingAddRequest.getCollectiveEvent();
+        Training training = trainingAddRequest.training();
+        CollectiveEvent collectiveEvent = trainingAddRequest.collectiveEvent();
         training.setCollectiveEvent(collectiveEvent);
         trainingRepository.save(training);
         playerTraining.setTraining(training);
@@ -65,10 +72,10 @@ public class EventAddController {
         Optional<Player> optionalPlayer = playerRepository.findById(UID);
         if (optionalPlayer.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка сервера");
         Player player = optionalPlayer.get();
-        PlayerMatch playerMatch = matchAddRequest.getPlayerMatch();
+        PlayerMatch playerMatch = matchAddRequest.playerMatch();
         playerMatch.setPlayer(player);
-        Match match = matchAddRequest.getMatch();
-        CollectiveEvent collectiveEvent = matchAddRequest.getCollectiveEvent();
+        Match match = matchAddRequest.match();
+        CollectiveEvent collectiveEvent = matchAddRequest.collectiveEvent();
         match.setCollectiveEvent(collectiveEvent);
         matchRepository.save(match);
         playerMatch.setMatch(match);
@@ -82,15 +89,102 @@ public class EventAddController {
         Optional<Player> optionalPlayer = playerRepository.findById(UID);
         if (optionalPlayer.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка сервера");
         Player player = optionalPlayer.get();
-        PlayerCustom playerCustom = customAddRequest.getPlayerCustom();
+        PlayerCustom playerCustom = customAddRequest.playerCustom();
         playerCustom.setPlayer(player);
-        Custom custom = customAddRequest.getCustom();
-        CollectiveEvent collectiveEvent = customAddRequest.getCollectiveEvent();
+        Custom custom = customAddRequest.custom();
+        CollectiveEvent collectiveEvent = customAddRequest.collectiveEvent();
         custom.setCollectiveEvent(collectiveEvent);
         customRepository.save(custom);
         playerCustom.setCustom(custom);
         playerCustomRepository.save(playerCustom);
         return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"Saved\"}");
+    }
+
+    @PostMapping("new/club/custom")
+    public ResponseEntity<?> addClubCustom(@RequestBody ClubCustomAddRequest customAddRequest,
+                                           @RequestAttribute(name = "Uid") Integer UID) {
+
+        Club club = clubRepository.findByIdAndAdmin(customAddRequest.clubId(), UID);
+        CollectiveEvent collectiveEvent = customAddRequest.collectiveEvent();
+        CollectiveEvent savedCollectiveEvent = collectiveEventRepository.save(collectiveEvent);
+
+        ClubEvent clubEvent = customAddRequest.clubEvent();
+        clubEvent.setId_club(club);
+        clubEvent.setId_collective_event(savedCollectiveEvent);
+
+        Custom custom = customAddRequest.custom();
+        custom.setCollectiveEvent(savedCollectiveEvent);
+        clubEventRepository.save(clubEvent);
+        customRepository.save(custom);
+
+        for (Integer playerId : customAddRequest.players()) {
+            Optional<Player> optionalPlayer = playerRepository.findById(Long.valueOf(playerId));
+            if (optionalPlayer.isEmpty()) continue;
+            Player player = optionalPlayer.get();
+            PlayerCustom playerCustom = new PlayerCustom();
+            playerCustom.setPlayer(player);
+            playerCustom.setCustom(custom);
+            playerCustomRepository.save(playerCustom);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("new/club/training")
+    public Training addClubTraining(@RequestBody ClubTrainingAddRequest trainingAddRequest,
+                                           @RequestAttribute(name = "Uid") Integer UID) {
+        Club club = clubRepository.findByIdAndAdmin(trainingAddRequest.clubId(), UID);
+        CollectiveEvent collectiveEvent = trainingAddRequest.collectiveEvent();
+        CollectiveEvent savedCollectiveEvent = collectiveEventRepository.save(collectiveEvent);
+
+        ClubEvent clubEvent = trainingAddRequest.clubEvent();
+        clubEvent.setId_club(club);
+        clubEvent.setId_collective_event(savedCollectiveEvent);
+
+        Training training = trainingAddRequest.training();
+        training.setCollectiveEvent(savedCollectiveEvent);
+
+        clubEventRepository.save(clubEvent);
+        Training savedTraining = trainingRepository.save(training);
+
+        for (Integer playerId : trainingAddRequest.players()) {
+            Optional<Player> optionalPlayer = playerRepository.findById(Long.valueOf(playerId));
+            if (optionalPlayer.isEmpty()) continue;
+            Player player = optionalPlayer.get();
+            PlayerTraining playerTraining = new PlayerTraining();
+            playerTraining.setPlayer(player);
+            playerTraining.setTraining(training);
+            playerTrainingRepository.save(playerTraining);
+        }
+        return training;
+    }
+
+    @PostMapping("new/club/match")
+    public ResponseEntity<?> addClubMatch(@RequestBody ClubMatchAddRequest matchAddRequest,
+                                             @RequestAttribute(name = "Uid") Integer UID) {
+        Club club = clubRepository.findByIdAndAdmin(matchAddRequest.clubId(), UID);
+        CollectiveEvent collectiveEvent = matchAddRequest.collectiveEvent();
+        CollectiveEvent savedCollectiveEvent = collectiveEventRepository.save(collectiveEvent);
+
+        ClubEvent clubEvent = matchAddRequest.clubEvent();
+        clubEvent.setId_club(club);
+        clubEvent.setId_collective_event(savedCollectiveEvent);
+
+        Match match = matchAddRequest.match();
+        match.setCollectiveEvent(savedCollectiveEvent);
+
+        clubEventRepository.save(clubEvent);
+        matchRepository.save(match);
+
+        for (Integer playerId : matchAddRequest.players()) {
+            Optional<Player> optionalPlayer = playerRepository.findById(Long.valueOf(playerId));
+            if (optionalPlayer.isEmpty()) continue;
+            Player player = optionalPlayer.get();
+            PlayerMatch playerMatch = new PlayerMatch();
+            playerMatch.setPlayer(player);
+            playerMatch.setMatch(match);
+            playerMatchRepository.save(playerMatch);
+        }
+        return ResponseEntity.ok().build();
     }
 
 }

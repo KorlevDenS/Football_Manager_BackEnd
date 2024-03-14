@@ -1,12 +1,14 @@
 package com.den.korolev.football_manager.forms_controllers;
 
 import com.den.korolev.football_manager.entities.*;
+import com.den.korolev.football_manager.request_params.ClubCollectiveEvent;
 import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/event/get")
@@ -19,6 +21,7 @@ public class EventGetController {
     private final PlayerTrainingRepository playerTrainingRepository;
     private final PlayerCustomRepository playerCustomRepository;
     private final CollectiveEventRepository collectiveEventRepository;
+    private final ClubEventRepository clubEventRepository;
 
 
     public EventGetController(PlayerMatchRepository playerMatchRepository,
@@ -27,7 +30,8 @@ public class EventGetController {
                               MatchRepository matchRepository,
                               TrainingRepository trainingRepository,
                               CustomRepository customRepository,
-                              CollectiveEventRepository collectiveEventRepository) {
+                              CollectiveEventRepository collectiveEventRepository,
+                              ClubEventRepository clubEventRepository) {
         this.playerMatchRepository = playerMatchRepository;
         this.playerTrainingRepository = playerTrainingRepository;
         this.playerCustomRepository = playerCustomRepository;
@@ -35,11 +39,21 @@ public class EventGetController {
         this.trainingRepository = trainingRepository;
         this.customRepository = customRepository;
         this.collectiveEventRepository = collectiveEventRepository;
+        this.clubEventRepository = clubEventRepository;
     }
 
     @GetMapping("collective/events")
     public List<CollectiveEvent> getEvents(@RequestAttribute(name = "Uid") Long UID) {
         return collectiveEventRepository.findAllByUserID(UID);
+    }
+
+    @GetMapping("club/collective/events/{clubId}")
+    public List<ClubCollectiveEvent> getClubEvents(@PathVariable Integer clubId,
+                                                   @RequestAttribute(name = "Uid") Integer UID) {
+        List<ClubEvent> clubEvents = clubEventRepository.getClubEventsByClubAndAdmin(clubId, UID);
+        return clubEvents.stream()
+                .map(clubEvent -> new ClubCollectiveEvent(clubEvent, clubEvent.getId_collective_event()))
+                .toList();
     }
 
     @GetMapping("collective/events/{begin}/{end}")
@@ -50,9 +64,26 @@ public class EventGetController {
         return collectiveEventRepository.findAllByTimePeriod(UID, dateFormat.parse(begin), dateFormat.parse(end));
     }
 
+    @GetMapping("club/collective/events/{clubId}/{begin}/{end}")
+    public List<ClubCollectiveEvent> getClubEventsByTimePeriod(@PathVariable String begin, @PathVariable String end,
+                                                               @PathVariable Integer clubId,
+                                                               @RequestAttribute(name = "Uid") Integer UID) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        List<ClubEvent> clubEvents = clubEventRepository.getClubEventsByTimePeriod(dateFormat.parse(begin),
+                dateFormat.parse(end), clubId, UID);
+        return clubEvents.stream()
+                .map(clubEvent -> new ClubCollectiveEvent(clubEvent, clubEvent.getId_collective_event()))
+                .collect(Collectors.toList());
+    }
+
     @PostMapping("match")
     public Match getMatchById(@RequestBody Integer id, @RequestAttribute(name = "Uid") Long UID) {
         return matchRepository.findByUserAndEvent(id, UID);
+    }
+
+    @PostMapping("club/match")
+    public Match getClubMatchById(@RequestBody List<Integer> list, @RequestAttribute(name = "Uid") Long UID) {
+        return matchRepository.findByClubAndEvent(list.getFirst(), list.get(1), UID);
     }
 
     @PostMapping("training")
@@ -60,12 +91,20 @@ public class EventGetController {
         return trainingRepository.findByUserAndEvent(id, UID);
     }
 
+    @PostMapping("club/training")
+    public Training getClubTrainingById(@RequestBody List<Integer> list, @RequestAttribute(name = "Uid") Long UID) {
+        return trainingRepository.findByClubAndEvent(list.getFirst(), list.get(1), UID);
+    }
+
     @PostMapping("custom")
     public Custom getCustomById(@RequestBody Integer id, @RequestAttribute(name = "Uid") Long UID) {
         return customRepository.findByUserAndEvent(id, UID);
     }
 
-
+    @PostMapping("club/custom")
+    public Custom getClubCustomById(@RequestBody List<Integer> list, @RequestAttribute(name = "Uid") Long UID) {
+        return customRepository.findByClubAndEvent(list.getFirst(), list.get(1), UID);
+    }
 
     @Transactional
     @PostMapping("player/match")

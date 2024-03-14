@@ -8,6 +8,7 @@ import lombok.Setter;
 @Table(name = "client")
 @Getter
 @Setter
+@Deprecated
 public class Client {
 
     @Id

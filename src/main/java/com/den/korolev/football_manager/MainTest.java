@@ -3,6 +3,7 @@ package com.den.korolev.football_manager;
 import com.den.korolev.football_manager.user.InvalidTokenException;
 import com.den.korolev.football_manager.services.JwtTokenService;
 
+@Deprecated
 public class MainTest {
 
 

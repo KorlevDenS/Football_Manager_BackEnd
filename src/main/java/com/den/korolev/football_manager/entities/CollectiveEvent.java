@@ -37,4 +37,8 @@ public class CollectiveEvent {
     @JsonIgnore
     private Custom custom;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "id_collective_event")
+    private ClubEvent clubEvents;
+
 }

@@ -1,8 +1,8 @@
 package com.den.korolev.football_manager;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
+@Deprecated
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
     //@Query()

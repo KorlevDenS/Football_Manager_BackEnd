@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+@Deprecated
 @RestController
 @RequestMapping("/clients")
 public class ClientsController {
